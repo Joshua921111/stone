@@ -1,0 +1,781 @@
+import React, { useState } from 'react';
+import { MapPin, Calendar, Plane, Train, Hotel, Ticket, Coffee, Camera, ChevronDown, ChevronUp, Info, DollarSign, Star, ArrowRight, Menu, X, Bus, Sparkles, Send, Loader2, User, Mail, GraduationCap, Heart, Instagram, Image as ImageIcon } from 'lucide-react';
+
+// --- Gemini API Helper ---
+const callGeminiAPI = async (prompt) => {
+  const apiKey = ""; // Provided by the execution environment
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+        }),
+      }
+    );
+    const data = await response.json();
+    if (data.error) {
+      throw new Error(data.error.message);
+    }
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || "No response generated.";
+  } catch (error) {
+    console.error("API Error:", error);
+    return "Sorry, I encountered an error while connecting to the AI service. Please try again later.";
+  }
+};
+
+// --- Mock Data ---
+
+const ITINERARY_DAYS = [
+  {
+    day: "Day 1",
+    title: "Arrival & Union Square",
+    desc: "Land at SFO, take BART to the city. Check into the hotel. Spend the afternoon exploring Union Square, ride the famous Cable Car turn-around at Powell St, and grab a welcome dinner at The Cheesecake Factory atop Macy's for a city view.",
+    highlights: ["Union Square", "Cable Car Turnaround", "Maiden Lane"]
+  },
+  {
+    day: "Day 2",
+    title: "The Icons: Bridge & Park",
+    desc: "Morning bike ride across the Golden Gate Bridge to Sausalito. Ferry back to the Ferry Building. Afternoon picnic at the Palace of Fine Arts.",
+    highlights: ["Golden Gate Bridge", "Sausalito", "Ferry Building", "Palace of Fine Arts"]
+  },
+  {
+    day: "Day 3",
+    title: "Alcatraz & The Wharf",
+    desc: "Pre-booked tour to Alcatraz Island (The Rock). Afterward, explore Fisherman's Wharf, say hi to the sea lions at Pier 39, and eat Clam Chowder in a sourdough bread bowl at Boudin Bakery.",
+    highlights: ["Alcatraz Tour", "Pier 39 Sea Lions", "Fisherman's Wharf", "Boudin Bakery"]
+  },
+  {
+    day: "Day 4",
+    title: "Tech & Culture: SOMA & Mission",
+    desc: "Start at SFMOMA (Modern Art Museum). Lunch at a taqueria in the Mission District (Mission Burrito is a must!). Relax at Dolores Park for the best skyline view.",
+    highlights: ["SFMOMA", "Mission District Murals", "Dolores Park", "Tartine Bakery"]
+  },
+  {
+    day: "Day 5",
+    title: "Game Day: Go Giants!",
+    desc: "Walk along the Embarcadero. Visit the Exploratorium if time permits. Head to Oracle Park for the SF Giants game. Evening drinks at a local brewery in SOMA.",
+    highlights: ["Embarcadero", "Oracle Park", "Local Brewery"]
+  },
+  {
+    day: "Day 6",
+    title: "Nature & Twist: Lands End & Lombard",
+    desc: "Hike the Lands End trail for rugged coast views. Visit the Sutro Baths ruins. Take an Uber to Lombard Street (the crookedest street) before sunset.",
+    highlights: ["Lands End", "Sutro Baths", "Lombard Street", "Ghirardelli Square"]
+  },
+  {
+    day: "Day 7",
+    title: "Coffee & Departure",
+    desc: "Morning coffee at Blue Bottle or Philz Coffee. Last-minute souvenir shopping at Hayes Valley. Take BART back to SFO for the flight home.",
+    highlights: ["Hayes Valley", "Painted Ladies", "Airport Transfer"]
+  }
+];
+
+const HOTELS = [
+  {
+    name: "Hotel Riu Plaza Fisherman's Wharf",
+    area: "Fisherman's Wharf",
+    price: "$250 - $350 / night",
+    rating: 4.5,
+    desc: "Tourist-friendly location. Safe, walking distance to Pier 39. Great buffet breakfast included.",
+    image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1000&auto=format&fit=crop"
+  },
+  {
+    name: "CitizenM San Francisco Union Square",
+    area: "Union Square",
+    price: "$180 - $280 / night",
+    rating: 4.7,
+    desc: "Modern, tech-savvy micro-rooms. Very central for shopping and transport (BART/Cable Car).",
+    image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&w=1000&auto=format&fit=crop"
+  },
+  {
+    name: "Hyatt Place SF Downtown",
+    area: "SOMA / Oracle Park",
+    price: "$300 - $450 / night",
+    rating: 4.3,
+    desc: "Perfect for baseball fans. Walking distance to the stadium. Spacious rooms.",
+    image: "https://images.unsplash.com/photo-1590490360182-f33efe29a795?q=80&w=1000&auto=format&fit=crop"
+  }
+];
+
+const SF_GALLERY = [
+  {
+    title: "Golden Gate Bridge",
+    location: "Marin Headlands",
+    image: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop"
+  },
+  {
+    title: "Oracle Park - Game Day",
+    location: "South Beach",
+    image: "https://images.unsplash.com/photo-1628266259513-4c26b34b5f73?q=80&w=1000&auto=format&fit=crop"
+  },
+  {
+    title: "Palace of Fine Arts",
+    location: "Marina District",
+    image: "https://images.unsplash.com/photo-1549913188-1e644390740e?q=80&w=1000&auto=format&fit=crop"
+  },
+  {
+    title: "Lombard Street",
+    location: "Russian Hill",
+    image: "https://images.unsplash.com/photo-1528552695596-c57c93e1531a?q=80&w=1000&auto=format&fit=crop"
+  },
+  {
+    title: "Painted Ladies",
+    location: "Alamo Square",
+    image: "https://images.unsplash.com/photo-1521464302861-ce943915d1c3?q=80&w=1000&auto=format&fit=crop"
+  },
+  {
+    title: "San Francisco Cable Car",
+    location: "Powell Street",
+    image: "https://images.unsplash.com/photo-1556379346-2419e4279414?q=80&w=1000&auto=format&fit=crop"
+  },
+  {
+    title: "Pier 39 Sea Lions",
+    location: "Fisherman's Wharf",
+    image: "https://images.unsplash.com/photo-1569838616563-279e3451d85d?q=80&w=1000&auto=format&fit=crop"
+  },
+  {
+    title: "Chinatown",
+    location: "Grant Avenue",
+    image: "https://images.unsplash.com/photo-1550948537-130a1ce83314?q=80&w=1000&auto=format&fit=crop"
+  },
+  {
+    title: "Oracle Park - Field View",
+    location: "South Beach",
+    image: "https://images.unsplash.com/photo-1534195251218-0504b42656dc?q=80&w=1000&auto=format&fit=crop"
+  },
+  {
+    title: "Alcatraz Island",
+    location: "San Francisco Bay",
+    image: "https://images.unsplash.com/photo-1542317854-f9bc35300a96?q=80&w=1000&auto=format&fit=crop"
+  }
+];
+
+// --- Components ---
+
+const SectionHero = ({ title, subtitle, image }) => (
+  <div className="relative h-64 md:h-80 w-full overflow-hidden rounded-xl mb-8 shadow-lg group">
+    <img src={image} alt={title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+    <div className="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-center p-4">
+      <h2 className="text-3xl md:text-5xl font-serif font-bold text-white mb-2 shadow-text">{title}</h2>
+      <p className="text-stone-200 text-sm md:text-lg font-light tracking-wide">{subtitle}</p>
+    </div>
+  </div>
+);
+
+export default function App() {
+  const [activeTab, setActiveTab] = useState('itinerary'); // itinerary, transport, baseball, hotels, ai, contact, gallery
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [openDay, setOpenDay] = useState(0); // Accordion state for itinerary
+  
+  // AI State
+  const [aiQuery, setAiQuery] = useState("");
+  const [aiResponse, setAiResponse] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleAskAI = async () => {
+    if (!aiQuery.trim()) return;
+    setIsLoading(true);
+    setAiResponse("");
+    
+    const prompt = `You are a helpful travel assistant for a San Francisco travel blog. 
+    The user is asking: "${aiQuery}". 
+    Provide a helpful, concise, and friendly answer about San Francisco travel. 
+    Focus on tourist tips, hidden gems, or practical advice for SF.`;
+
+    const response = await callGeminiAPI(prompt);
+    setAiResponse(response);
+    setIsLoading(false);
+  };
+
+  const NavButton = ({ id, icon: Icon, label }) => (
+    <button 
+      onClick={() => {setActiveTab(id); setIsMenuOpen(false); window.scrollTo(0,0);}}
+      className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 ${activeTab === id ? 'bg-amber-600 text-white shadow-md' : 'text-stone-600 hover:bg-stone-100'}`}
+    >
+      <Icon size={18} />
+      <span>{label}</span>
+    </button>
+  );
+
+  // --- VIEW: ITINERARY ---
+  const renderItinerary = () => (
+    <div className="animate-fade-in">
+      <SectionHero 
+        title="7 Days in the Fog City" 
+        subtitle="The Ultimate San Francisco Experience" 
+        image="https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1600&auto=format&fit=crop"
+      />
+      
+      <div className="grid md:grid-cols-3 gap-8">
+        <div className="md:col-span-2 space-y-4">
+          <h3 className="text-2xl font-bold text-stone-800 mb-6 flex items-center">
+            <Calendar className="mr-2 text-amber-600" /> Daily Plan
+          </h3>
+          {ITINERARY_DAYS.map((item, index) => (
+            <div key={index} className="border border-stone-200 rounded-lg overflow-hidden bg-white shadow-sm">
+              <button 
+                onClick={() => setOpenDay(openDay === index ? -1 : index)}
+                className="w-full flex justify-between items-center p-5 bg-stone-50 hover:bg-stone-100 transition-colors text-left"
+              >
+                <div>
+                  <span className="text-xs font-bold text-amber-600 uppercase tracking-wider">{item.day}</span>
+                  <h4 className="text-lg font-serif font-bold text-stone-800">{item.title}</h4>
+                </div>
+                {openDay === index ? <ChevronUp size={20} className="text-stone-400"/> : <ChevronDown size={20} className="text-stone-400"/>}
+              </button>
+              
+              {openDay === index && (
+                <div className="p-5 border-t border-stone-100 bg-white">
+                  <p className="text-stone-600 leading-relaxed mb-4">{item.desc}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {item.highlights.map((tag, i) => (
+                      <span key={i} className="px-2 py-1 bg-amber-50 text-amber-700 text-xs rounded-md font-medium">#{tag}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Sidebar / Highlights */}
+        <div className="space-y-6">
+          <div className="bg-stone-900 text-white p-6 rounded-xl shadow-lg">
+             <h4 className="font-bold text-lg mb-4 flex items-center"><Camera className="mr-2" /> Photo Spots</h4>
+             <ul className="space-y-3 text-sm text-stone-300">
+               <li className="flex items-start"><MapPin size={14} className="mt-1 mr-2 text-amber-500"/> Golden Gate Bridge (Battery Spencer)</li>
+               <li className="flex items-start"><MapPin size={14} className="mt-1 mr-2 text-amber-500"/> Painted Ladies (Alamo Square)</li>
+               <li className="flex items-start"><MapPin size={14} className="mt-1 mr-2 text-amber-500"/> Lombard Street</li>
+               <li className="flex items-start"><MapPin size={14} className="mt-1 mr-2 text-amber-500"/> Chinatown Dragon Gate</li>
+             </ul>
+          </div>
+          <div className="bg-amber-50 p-6 rounded-xl border border-amber-100">
+            <h4 className="font-bold text-amber-800 mb-2">Travel Tip</h4>
+            <p className="text-sm text-amber-900">
+              San Francisco has micro-climates. It can be sunny in the Mission but foggy and cold at the Golden Gate Bridge. 
+              <strong>Always dress in layers!</strong>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // --- VIEW: TRANSPORT ---
+  const renderTransport = () => (
+    <div className="animate-fade-in">
+       <SectionHero 
+        title="Flights & Getting Around" 
+        subtitle="From TPE to SFO and navigating the hills" 
+        image="https://images.unsplash.com/photo-1556379346-2419e4279414?q=80&w=1600&auto=format&fit=crop"
+      />
+
+      <div className="grid md:grid-cols-2 gap-8 mb-12">
+        {/* International Flight */}
+        <div className="bg-white p-6 rounded-xl shadow-md border border-stone-100">
+           <div className="flex items-center mb-4 text-blue-900">
+             <Plane className="w-8 h-8 mr-3" />
+             <h3 className="text-xl font-bold">TPE <ArrowRight size={16} className="inline mx-1"/> SFO</h3>
+           </div>
+           <p className="text-stone-600 mb-4">
+             Direct flights from Taoyuan International Airport (TPE) to San Francisco (SFO) are the most convenient option.
+           </p>
+           <ul className="space-y-3 text-sm text-stone-700">
+             <li className="flex justify-between border-b border-stone-100 pb-2">
+               <span><strong>Airlines:</strong></span>
+               <span>EVA Air, China Airlines, United, Starlux</span>
+             </li>
+             <li className="flex justify-between border-b border-stone-100 pb-2">
+               <span><strong>Duration:</strong></span>
+               <span>Approx. 11-12 Hours</span>
+             </li>
+             <li className="flex justify-between border-b border-stone-100 pb-2">
+               <span><strong>Arrival:</strong></span>
+               <span>SFO International Terminal</span>
+             </li>
+           </ul>
+           <div className="mt-4 p-3 bg-blue-50 text-blue-800 text-sm rounded-lg">
+             <strong>Tip:</strong> SFO is 13 miles south of downtown. The easiest way to the city is BART (Bay Area Rapid Transit).
+           </div>
+        </div>
+
+        {/* Local Transport */}
+        <div className="bg-white p-6 rounded-xl shadow-md border border-stone-100">
+           <div className="flex items-center mb-4 text-amber-600">
+             <Bus className="w-8 h-8 mr-3" />
+             <h3 className="text-xl font-bold">City Transport</h3>
+           </div>
+           <p className="text-stone-600 mb-4">
+             You don't need a car in SF! Parking is expensive and traffic is heavy. Use these instead:
+           </p>
+           <div className="space-y-4">
+             <div className="flex items-start">
+               <div className="bg-stone-100 p-2 rounded mr-3"><Ticket size={18}/></div>
+               <div>
+                 <h4 className="font-bold text-stone-800">Clipper Card (Mobile)</h4>
+                 <p className="text-xs text-stone-500">Add the "Clipper" card to your Apple Pay or Google Wallet. It works on BART, Muni buses, and Cable Cars. No plastic card needed!</p>
+               </div>
+             </div>
+             <div className="flex items-start">
+               <div className="bg-stone-100 p-2 rounded mr-3"><Train size={18}/></div>
+               <div>
+                 <h4 className="font-bold text-stone-800">BART vs. Muni</h4>
+                 <p className="text-xs text-stone-500"><strong>BART:</strong> Fast trains for airport and East Bay (Oakland).<br/><strong>Muni:</strong> Buses and light rail within the city.</p>
+               </div>
+             </div>
+             <div className="flex items-start">
+               <div className="bg-stone-100 p-2 rounded mr-3"><Bus size={18}/></div>
+               <div>
+                 <h4 className="font-bold text-stone-800">Cable Cars</h4>
+                 <p className="text-xs text-stone-500">Tourist attraction but also transport. $8.00 per ride. Use Clipper.</p>
+               </div>
+             </div>
+           </div>
+        </div>
+      </div>
+
+      {/* Waymo/Uber Section */}
+      <div className="bg-gradient-to-r from-stone-900 to-stone-800 text-white rounded-xl p-8 flex flex-col md:flex-row items-center justify-between shadow-lg">
+        <div className="md:w-2/3 mb-6 md:mb-0">
+          <h3 className="text-2xl font-bold mb-2">Rideshare & Robotaxis</h3>
+          <p className="text-stone-300 text-sm leading-relaxed">
+            Uber and Lyft are everywhere. For a futuristic experience, download the <strong>Waymo One</strong> app. 
+            SF is one of the few cities where you can ride in a fully driverless car! It's safe, smooth, and a great vlog topic.
+          </p>
+        </div>
+        <div className="bg-white/10 p-4 rounded-lg backdrop-blur-sm text-center">
+          <span className="block text-3xl font-bold text-green-400">~$15-25</span>
+          <span className="text-xs uppercase tracking-wider">Avg Uber Trip within City</span>
+        </div>
+      </div>
+    </div>
+  );
+
+  // --- VIEW: BASEBALL ---
+  const renderBaseball = () => (
+    <div className="animate-fade-in">
+      <SectionHero 
+        title="Go Giants!" 
+        subtitle="MLB Experience at Oracle Park" 
+        image="https://images.unsplash.com/photo-1534195251218-0504b42656dc?q=80&w=1600&auto=format&fit=crop"
+      />
+      
+      <div className="bg-orange-50 border-l-4 border-orange-500 p-4 mb-8">
+        <p className="text-orange-900 font-medium">
+          <strong>Stadium:</strong> Oracle Park <br/>
+          <strong>Location:</strong> 24 Willie Mays Plaza (SOMA/Embarcadero)
+        </p>
+      </div>
+
+      <div className="grid md:grid-cols-3 gap-8">
+        <div className="md:col-span-2 space-y-8">
+          {/* Tickets */}
+          <section>
+             <h3 className="text-2xl font-serif font-bold text-stone-900 mb-4 flex items-center">
+               <Ticket className="mr-2 text-orange-600" /> Tickets & Seats
+             </h3>
+             <p className="text-stone-600 mb-4">
+               Buy tickets via the <strong>MLB Ballpark App</strong> or StubHub. 
+               Avoid paper tickets; everything is digital.
+             </p>
+             <div className="bg-white rounded-lg border border-stone-200 overflow-hidden">
+               <table className="w-full text-sm text-left">
+                 <thead className="bg-stone-100 text-stone-700">
+                   <tr>
+                     <th className="p-3">Section</th>
+                     <th className="p-3">Avg Price</th>
+                     <th className="p-3">Vibe</th>
+                   </tr>
+                 </thead>
+                 <tbody className="divide-y divide-stone-100">
+                   <tr>
+                     <td className="p-3 font-bold">Bleachers (136-144)</td>
+                     <td className="p-3">$25 - $50</td>
+                     <td className="p-3">Rowdy, fun, real fans. Sun exposure!</td>
+                   </tr>
+                   <tr>
+                     <td className="p-3 font-bold">View Reserve (300s)</td>
+                     <td className="p-3">$30 - $60</td>
+                     <td className="p-3">High up, but incredible Bay views.</td>
+                   </tr>
+                   <tr>
+                     <td className="p-3 font-bold">Field Club (100s)</td>
+                     <td className="p-3">$120 - $250+</td>
+                     <td className="p-3">Close to action, padded seats.</td>
+                   </tr>
+                 </tbody>
+               </table>
+             </div>
+          </section>
+
+          {/* Food */}
+          <section>
+            <h3 className="text-2xl font-serif font-bold text-stone-900 mb-4 flex items-center">
+               <Coffee className="mr-2 text-orange-600" /> Must-Eat Stadium Food
+            </h3>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-stone-100">
+                <h4 className="font-bold text-stone-800">Gilroy Garlic Fries</h4>
+                <p className="text-xs text-stone-500 mt-1">The smell hits you instantly. Crispy fries smothered in garlic and parsley. Essential.</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-stone-100">
+                <h4 className="font-bold text-stone-800">Crazy Crab's Sandwich</h4>
+                <p className="text-xs text-stone-500 mt-1">Sourdough bread with fresh Dungeness crab. Expensive (~$22) but delicious.</p>
+              </div>
+            </div>
+          </section>
+          
+          {/* Transport to Game */}
+          <section>
+            <h3 className="text-2xl font-serif font-bold text-stone-900 mb-4">Getting There</h3>
+            <p className="text-stone-600">
+              <strong>Muni Metro:</strong> Take the N-Judah or T-Third line directly to the ballpark station.<br/>
+              <strong>Walking:</strong> It's a beautiful 20-minute walk from the Ferry Building along the Embarcadero.
+            </p>
+          </section>
+        </div>
+
+        {/* Sidebar */}
+        <div className="space-y-6">
+           <div className="bg-white p-6 rounded-xl shadow-lg border border-stone-100">
+             <img src="https://images.unsplash.com/photo-1595210382266-2d0077c1f541?q=80&w=800&auto=format&fit=crop" alt="Coke Bottle" className="w-full h-32 object-cover rounded-lg mb-4" />
+             <h4 className="font-bold text-lg mb-2">Feature: The Coke Bottle</h4>
+             <p className="text-sm text-stone-600 mb-4">Located in left field, this giant bottle has slides inside for kids!</p>
+             <h4 className="font-bold text-lg mb-2">McCovey Cove</h4>
+             <p className="text-sm text-stone-600">Look over the right-field wall to see kayakers waiting for "Splash Hits" (home runs hitting the water).</p>
+           </div>
+           <div className="bg-stone-900 text-white p-6 rounded-xl">
+             <h4 className="font-bold mb-2 text-orange-500">Pro Tip</h4>
+             <p className="text-sm">
+               It gets <strong>COLD</strong> at night games, even in summer. The wind blows in from the bay. Buy a Giants beanie or bring a heavy jacket.
+             </p>
+           </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // --- VIEW: ACCOMMODATION ---
+  const renderAccommodation = () => (
+    <div className="animate-fade-in">
+      <SectionHero 
+        title="Where to Stay" 
+        subtitle="Neighborhood guides and budget breakdowns" 
+        image="https://images.unsplash.com/photo-1523607067322-f0d03f549b23?q=80&w=1600&auto=format&fit=crop"
+      />
+
+      <div className="grid md:grid-cols-3 gap-6 mb-12">
+        {/* Area Guide */}
+        <div className="md:col-span-3 mb-6">
+          <h3 className="text-2xl font-serif font-bold text-stone-900 mb-4">Best Areas for Tourists</h3>
+          <div className="grid md:grid-cols-3 gap-4">
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <h4 className="font-bold text-blue-900">Union Square</h4>
+              <p className="text-xs text-blue-800 mt-1">Central shopping, transport hub (BART/Cable Car). Can be noisy.</p>
+            </div>
+            <div className="bg-green-50 p-4 rounded-lg">
+              <h4 className="font-bold text-green-900">Fisherman's Wharf</h4>
+              <p className="text-xs text-green-800 mt-1">Very touristy, safe, lots of seafood. Far from subway.</p>
+            </div>
+            <div className="bg-purple-50 p-4 rounded-lg">
+              <h4 className="font-bold text-purple-900">SOMA / Embarcadero</h4>
+              <p className="text-xs text-purple-800 mt-1">Modern hotels, great views, near Baseball stadium. Weekday business vibe.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Hotel Cards */}
+        {HOTELS.map((hotel, index) => (
+          <div key={index} className="bg-white rounded-xl shadow-lg overflow-hidden border border-stone-100 hover:shadow-xl transition-shadow flex flex-col">
+            <div className="h-48 overflow-hidden relative">
+              <img src={hotel.image} alt={hotel.name} className="w-full h-full object-cover" />
+              <div className="absolute top-3 right-3 bg-white/90 backdrop-blur px-2 py-1 rounded text-xs font-bold text-stone-800 flex items-center">
+                <Star size={12} className="text-amber-500 mr-1 fill-amber-500"/> {hotel.rating}
+              </div>
+            </div>
+            <div className="p-6 flex-grow flex flex-col justify-between">
+              <div>
+                <div className="text-xs font-bold text-amber-600 uppercase mb-2">{hotel.area}</div>
+                <h3 className="font-bold text-xl text-stone-900 mb-2 leading-tight">{hotel.name}</h3>
+                <p className="text-stone-500 text-sm mb-4">{hotel.desc}</p>
+              </div>
+              <div>
+                <div className="flex items-center text-stone-900 font-bold">
+                  <DollarSign size={16} className="text-green-600"/>
+                  {hotel.price}
+                </div>
+                <p className="text-xs text-stone-400 mt-1">*Prices vary by season</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      <div className="bg-stone-100 p-8 rounded-xl text-center">
+        <h3 className="text-xl font-bold text-stone-800 mb-2">Budget Overview</h3>
+        <p className="text-stone-600 max-w-2xl mx-auto mb-6">
+          San Francisco is expensive. Expect to pay <strong>$200 - $350</strong> per night for a decent 3-4 star hotel in a safe area. 
+          Hostels are available (~$60/night) but quality varies greatly.
+        </p>
+      </div>
+    </div>
+  );
+
+  // --- VIEW: AI ASSISTANT ---
+  const renderAI = () => (
+    <div className="animate-fade-in max-w-3xl mx-auto">
+      <div className="text-center mb-12">
+        <div className="inline-flex items-center justify-center p-3 bg-gradient-to-br from-amber-500 to-purple-600 rounded-full mb-6 shadow-lg">
+          <Sparkles className="text-white w-8 h-8" />
+        </div>
+        <h2 className="text-3xl md:text-5xl font-serif font-bold text-stone-900 mb-4">Ask Stone's AI</h2>
+        <p className="text-stone-600 text-lg">Need a specific tip? Ask me anything about San Francisco!</p>
+      </div>
+
+      <div className="bg-white rounded-2xl shadow-xl border border-stone-200 overflow-hidden">
+        <div className="p-6 bg-stone-50 border-b border-stone-100 min-h-[200px] flex flex-col justify-center items-center text-center">
+          {isLoading ? (
+             <div className="flex flex-col items-center text-stone-400 animate-pulse">
+                <Loader2 className="w-8 h-8 animate-spin mb-2 text-amber-600" />
+                <p>Thinking...</p>
+             </div>
+          ) : aiResponse ? (
+             <div className="text-left w-full prose prose-stone">
+                <p className="whitespace-pre-line text-stone-800 text-lg leading-relaxed">{aiResponse}</p>
+             </div>
+          ) : (
+             <div className="text-stone-400">
+                <Info className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                <p>Try asking: "How do I get to Sausalito?" or "Best coffee in Mission?"</p>
+             </div>
+          )}
+        </div>
+        
+        <div className="p-4 bg-white flex gap-2">
+          <input 
+            type="text" 
+            value={aiQuery}
+            onChange={(e) => setAiQuery(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleAskAI()}
+            placeholder="Ask about food, transport, or weather..." 
+            className="flex-grow px-4 py-3 rounded-xl border border-stone-200 focus:outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600 transition-all"
+          />
+          <button 
+            onClick={handleAskAI}
+            disabled={isLoading || !aiQuery.trim()}
+            className="bg-stone-900 text-white px-6 rounded-xl hover:bg-stone-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center font-bold"
+          >
+            <Send size={18} className="mr-2" /> Ask
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-8 grid grid-cols-2 md:grid-cols-3 gap-4 text-center">
+        {["Best Chowder?", "Is BART safe?", "Cable Car price?", "Cheap eats?", "Weather in July?", "Airport to City?"].map((q, i) => (
+          <button 
+            key={i}
+            onClick={() => {setAiQuery(q);}}
+            className="bg-white border border-stone-200 px-4 py-2 rounded-lg text-sm text-stone-600 hover:border-amber-500 hover:text-amber-600 transition-all"
+          >
+            {q}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
+  // --- VIEW: GALLERY ---
+  const renderGallery = () => (
+    <div className="animate-fade-in">
+      <SectionHero 
+        title="San Francisco in Pictures" 
+        subtitle="Capturing the beauty of the Bay Area" 
+        image="https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1600&auto=format&fit=crop"
+      />
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {SF_GALLERY.map((item, index) => (
+          <div key={index} className="group relative overflow-hidden rounded-xl shadow-lg cursor-pointer aspect-[4/3]">
+            <img 
+              src={item.image} 
+              alt={item.title} 
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+              <h3 className="text-white font-bold text-lg">{item.title}</h3>
+              <div className="flex items-center text-stone-300 text-xs mt-1">
+                <MapPin size={12} className="mr-1" /> {item.location}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  // --- VIEW: CONTACT ---
+  const renderContact = () => (
+    <div className="animate-fade-in max-w-4xl mx-auto">
+       <SectionHero 
+        title="Get in Touch" 
+        subtitle="Let's connect and share stories" 
+        image="https://images.unsplash.com/photo-1484807352052-23338990c6c6?q=80&w=1600&auto=format&fit=crop"
+      />
+
+      <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-stone-200">
+        <div className="grid md:grid-cols-2">
+          <div className="p-8 md:p-12 flex flex-col justify-center bg-stone-50 border-r border-stone-100">
+             <div className="w-48 h-48 bg-stone-200 rounded-full mx-auto mb-6 overflow-hidden border-4 border-white shadow-md relative group">
+               {/* Updated with a similar looking placeholder image from Unsplash */}
+               <img 
+                 src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1000&auto=format&fit=crop" 
+                 alt="Stone" 
+                 className="w-full h-full object-cover" 
+               />
+             </div>
+             <h2 className="text-3xl font-serif font-bold text-center text-stone-900 mb-2">Stone</h2>
+             <p className="text-center text-stone-500 mb-8">Traveler, Baseball Fan, Storyteller</p>
+             
+             <div className="space-y-6">
+               <div className="flex items-center p-4 bg-white rounded-lg shadow-sm border border-stone-100">
+                 <div className="p-2 bg-emerald-100 rounded-full mr-4"><User className="text-emerald-600" size={24} /></div>
+                 <div>
+                   <p className="text-xs text-stone-400 uppercase tracking-wide font-bold">About Me</p>
+                   <p className="text-stone-800 font-medium">A student in NTUST CHE like to travel in Taiwan and around the world</p>
+                 </div>
+               </div>
+
+               <div className="flex items-center p-4 bg-white rounded-lg shadow-sm border border-stone-100">
+                 <div className="p-2 bg-amber-100 rounded-full mr-4"><GraduationCap className="text-amber-600" size={24} /></div>
+                 <div>
+                   <p className="text-xs text-stone-400 uppercase tracking-wide font-bold">Education</p>
+                   <p className="text-stone-800 font-medium">NTUST (National Taiwan University of Science and Technology)</p>
+                 </div>
+               </div>
+
+               <div className="flex items-center p-4 bg-white rounded-lg shadow-sm border border-stone-100">
+                 <div className="p-2 bg-red-100 rounded-full mr-4"><Heart className="text-red-600" size={24} /></div>
+                 <div>
+                   <p className="text-xs text-stone-400 uppercase tracking-wide font-bold">Hobbies</p>
+                   <p className="text-stone-800 font-medium">Baseball, World Travel</p>
+                 </div>
+               </div>
+
+               <div className="flex items-center p-4 bg-white rounded-lg shadow-sm border border-stone-100">
+                 <div className="p-2 bg-pink-100 rounded-full mr-4"><Instagram className="text-pink-600" size={24} /></div>
+                 <div>
+                   <p className="text-xs text-stone-400 uppercase tracking-wide font-bold">Instagram</p>
+                   <a href="https://instagram.com/stone_411" target="_blank" rel="noopener noreferrer" className="text-stone-800 font-medium hover:text-amber-600 transition-colors">@stone_411</a>
+                 </div>
+               </div>
+
+               <div className="flex items-center p-4 bg-white rounded-lg shadow-sm border border-stone-100">
+                 <div className="p-2 bg-blue-100 rounded-full mr-4"><Mail className="text-blue-600" size={24} /></div>
+                 <div>
+                   <p className="text-xs text-stone-400 uppercase tracking-wide font-bold">Email</p>
+                   <a href="mailto:shihtingjhen786@gmail.com" className="text-stone-800 font-medium hover:text-amber-600 transition-colors">shihtingjhen786@gmail.com</a>
+                 </div>
+               </div>
+             </div>
+          </div>
+          
+          <div className="p-8 md:p-12 bg-white flex flex-col justify-center">
+             <h3 className="text-2xl font-bold text-stone-900 mb-6">Send me a message</h3>
+             <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+               <div>
+                 <label className="block text-sm font-bold text-stone-700 mb-2">Name</label>
+                 <input type="text" className="w-full px-4 py-3 rounded-lg border border-stone-200 focus:outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600 bg-stone-50" placeholder="Your name" />
+               </div>
+               <div>
+                 <label className="block text-sm font-bold text-stone-700 mb-2">Email</label>
+                 <input type="email" className="w-full px-4 py-3 rounded-lg border border-stone-200 focus:outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600 bg-stone-50" placeholder="your@email.com" />
+               </div>
+               <div>
+                 <label className="block text-sm font-bold text-stone-700 mb-2">Message</label>
+                 <textarea className="w-full px-4 py-3 rounded-lg border border-stone-200 focus:outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600 bg-stone-50 h-32" placeholder="What's on your mind?"></textarea>
+               </div>
+               <button className="w-full bg-stone-900 text-white font-bold py-3 rounded-lg hover:bg-stone-800 transition-all transform active:scale-95">
+                 Send Message
+               </button>
+             </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-stone-50 font-sans text-stone-800 pb-20">
+      
+      {/* Navigation */}
+      <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-stone-200 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-20">
+            <div 
+              className="font-serif text-2xl font-bold tracking-tighter text-stone-900 cursor-pointer"
+              onClick={() => setActiveTab('itinerary')}
+            >
+              Stone’s SF Vlog<span className="text-amber-600">.</span>
+            </div>
+
+            {/* Desktop Nav */}
+            <div className="hidden md:flex space-x-2">
+              <NavButton id="itinerary" icon={Calendar} label="7 Days Plan" />
+              <NavButton id="transport" icon={Plane} label="Transport" />
+              <NavButton id="baseball" icon={Ticket} label="Giants Game" />
+              <NavButton id="hotels" icon={Hotel} label="Stays" />
+              <NavButton id="gallery" icon={ImageIcon} label="Pictures" />
+              <NavButton id="ai" icon={Sparkles} label="Ask AI" />
+              <NavButton id="contact" icon={User} label="Contact" />
+            </div>
+
+            {/* Mobile Menu Button */}
+            <div className="md:hidden">
+              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 text-stone-600">
+                {isMenuOpen ? <X /> : <Menu />}
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-white border-b border-stone-200 p-4 space-y-2 shadow-lg absolute w-full">
+             <button onClick={() => {setActiveTab('itinerary'); setIsMenuOpen(false)}} className="block w-full text-left p-3 hover:bg-stone-50 rounded font-bold text-stone-700">7 Days Plan</button>
+             <button onClick={() => {setActiveTab('transport'); setIsMenuOpen(false)}} className="block w-full text-left p-3 hover:bg-stone-50 rounded font-bold text-stone-700">Transport</button>
+             <button onClick={() => {setActiveTab('baseball'); setIsMenuOpen(false)}} className="block w-full text-left p-3 hover:bg-stone-50 rounded font-bold text-stone-700">Giants Game</button>
+             <button onClick={() => {setActiveTab('hotels'); setIsMenuOpen(false)}} className="block w-full text-left p-3 hover:bg-stone-50 rounded font-bold text-stone-700">Accommodation</button>
+             <button onClick={() => {setActiveTab('gallery'); setIsMenuOpen(false)}} className="block w-full text-left p-3 hover:bg-stone-50 rounded font-bold text-stone-700 flex items-center"><ImageIcon size={16} className="mr-2"/> Pictures</button>
+             <button onClick={() => {setActiveTab('ai'); setIsMenuOpen(false)}} className="block w-full text-left p-3 hover:bg-stone-50 rounded font-bold text-amber-600 flex items-center"><Sparkles size={16} className="mr-2"/> Ask AI</button>
+             <button onClick={() => {setActiveTab('contact'); setIsMenuOpen(false)}} className="block w-full text-left p-3 hover:bg-stone-50 rounded font-bold text-stone-700 flex items-center"><User size={16} className="mr-2"/> Contact</button>
+          </div>
+        )}
+      </nav>
+
+      {/* Main Content Area */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {activeTab === 'itinerary' && renderItinerary()}
+        {activeTab === 'transport' && renderTransport()}
+        {activeTab === 'baseball' && renderBaseball()}
+        {activeTab === 'hotels' && renderAccommodation()}
+        {activeTab === 'gallery' && renderGallery()}
+        {activeTab === 'ai' && renderAI()}
+        {activeTab === 'contact' && renderContact()}
+      </main>
+
+      {/* Footer */}
+      <footer className="border-t border-stone-200 mt-12 pt-8 text-center">
+        <p className="text-stone-400 text-sm font-medium">© 2025 Stone’s Travel Vlog - San Francisco Edition</p>
+        <div className="flex justify-center space-x-4 mt-4 text-stone-400">
+          <Info size={16} className="hover:text-amber-600 cursor-pointer"/>
+          <Camera size={16} className="hover:text-amber-600 cursor-pointer"/>
+        </div>
+      </footer>
+    </div>
+  );
+}
