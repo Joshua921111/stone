@@ -63,13 +63,32 @@
             MapPin, Calendar, Plane, Train, Hotel, Ticket, Coffee, Camera, 
             ChevronDown, ChevronUp, Info, DollarSign, Star, ArrowRight, Menu, 
             X, Bus, Sparkles, Send, Loader2, User, Mail, GraduationCap, 
-            Heart, Instagram, Image as ImageIcon 
+            Heart, Instagram, Image as ImageIcon, CloudSun, Thermometer, Wind
         } from 'lucide-react';
+
+        // --- CONFIGURATION (圖片設定區) ---
+        // 請依照下方的檔名準備照片，並放在同一個資料夾中。
+        
+        // 1. Transport Page
+        const SFO_IMAGE_SRC = "sf_transport.jpg";
+        const SFO_FALLBACK_URL = "https://images.unsplash.com/photo-1531722563067-d2723330e09c?q=80&w=1600&auto=format&fit=crop";
+
+        // 2. Weather Page
+        const WEATHER_IMAGE_SRC = "sf_weather.jpg";
+        const WEATHER_FALLBACK_URL = "https://images.unsplash.com/photo-1526404422292-16901184f5eb?q=80&w=1600&auto=format&fit=crop";
+
+        // 3. Baseball Page Hero (Go Giants!)
+        const GIANTS_HERO_SRC = "sf_giants.jpg";
+        const GIANTS_HERO_FALLBACK = "https://images.unsplash.com/photo-1534195251218-0504b42656dc?q=80&w=1600&auto=format&fit=crop";
+
+        // 4. Accommodation Page Hero (Where to Stay)
+        const STAY_HERO_SRC = "sf_stay.jpg";
+        const STAY_HERO_FALLBACK = "https://images.unsplash.com/photo-1523607067322-f0d03f549b23?q=80&w=1600&auto=format&fit=crop";
+
+        // ---------------------
 
         // --- Gemini API Helper ---
         const callGeminiAPI = async (prompt) => {
-            // Note: In a real deployed app, you should protect your API key.
-            // Since this is a client-side demo, we keep it empty or use a proxy.
             const apiKey = ""; 
             
             if (!apiKey) {
@@ -154,7 +173,8 @@
             price: "$250 - $350 / night",
             rating: 4.5,
             desc: "Tourist-friendly location. Safe, walking distance to Pier 39. Great buffet breakfast included.",
-            image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1000&auto=format&fit=crop"
+            image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1000&auto=format&fit=crop", 
+            isLocal: false 
         },
         {
             name: "CitizenM San Francisco Union Square",
@@ -162,7 +182,8 @@
             price: "$180 - $280 / night",
             rating: 4.7,
             desc: "Modern, tech-savvy micro-rooms. Very central for shopping and transport (BART/Cable Car).",
-            image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&w=1000&auto=format&fit=crop"
+            image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&w=1000&auto=format&fit=crop",
+            isLocal: false
         },
         {
             name: "Hyatt Place SF Downtown",
@@ -170,7 +191,10 @@
             price: "$300 - $450 / night",
             rating: 4.3,
             desc: "Perfect for baseball fans. Walking distance to the stadium. Spacious rooms.",
-            image: "https://images.unsplash.com/photo-1590490360182-f33efe29a795?q=80&w=1000&auto=format&fit=crop"
+            // Future file: sf_hyatt.jpg
+            localImage: "sf_hyatt.jpg",
+            fallbackImage: "https://images.unsplash.com/photo-1590490360182-f33efe29a795?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
         }
         ];
 
@@ -178,53 +202,95 @@
         {
             title: "Golden Gate Bridge",
             location: "Marin Headlands",
-            image: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop"
+            image: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
+            isLocal: false
         },
         {
             title: "Oracle Park - Game Day",
             location: "South Beach",
-            image: "https://images.unsplash.com/photo-1628266259513-4c26b34b5f73?q=80&w=1000&auto=format&fit=crop"
+            // Future file: sf_oracle_game.jpg
+            localImage: "sf_oracle_game.jpg",
+            fallbackImage: "https://images.unsplash.com/photo-1628266259513-4c26b34b5f73?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
         },
         {
             title: "Palace of Fine Arts",
             location: "Marina District",
-            image: "https://images.unsplash.com/photo-1549913188-1e644390740e?q=80&w=1000&auto=format&fit=crop"
+            // Future file: sf_palace.jpg
+            localImage: "sf_palace.jpg",
+            fallbackImage: "https://images.unsplash.com/photo-1549913188-1e644390740e?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
         },
         {
             title: "Lombard Street",
             location: "Russian Hill",
-            image: "https://images.unsplash.com/photo-1528552695596-c57c93e1531a?q=80&w=1000&auto=format&fit=crop"
+            // Future file: sf_lombard.jpg
+            localImage: "sf_lombard.jpg",
+            fallbackImage: "https://images.unsplash.com/photo-1528552695596-c57c93e1531a?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
         },
         {
             title: "Painted Ladies",
             location: "Alamo Square",
-            image: "https://images.unsplash.com/photo-1521464302861-ce943915d1c3?q=80&w=1000&auto=format&fit=crop"
+            image: "https://images.unsplash.com/photo-1521464302861-ce943915d1c3?q=80&w=1000&auto=format&fit=crop",
+            isLocal: false
         },
         {
             title: "San Francisco Cable Car",
             location: "Powell Street",
-            image: "https://images.unsplash.com/photo-1556379346-2419e4279414?q=80&w=1000&auto=format&fit=crop"
+            // Future file: sf_cablecar.jpg
+            localImage: "sf_cablecar.jpg",
+            fallbackImage: "https://images.unsplash.com/photo-1556379346-2419e4279414?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
         },
         {
             title: "Pier 39 Sea Lions",
             location: "Fisherman's Wharf",
-            image: "https://images.unsplash.com/photo-1569838616563-279e3451d85d?q=80&w=1000&auto=format&fit=crop"
+            // Future file: sf_sealions.jpg
+            localImage: "sf_sealions.jpg",
+            fallbackImage: "https://images.unsplash.com/photo-1569838616563-279e3451d85d?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
         },
         {
             title: "Chinatown",
             location: "Grant Avenue",
-            image: "https://images.unsplash.com/photo-1550948537-130a1ce83314?q=80&w=1000&auto=format&fit=crop"
+            // Future file: sf_chinatown.jpg
+            localImage: "sf_chinatown.jpg",
+            fallbackImage: "https://images.unsplash.com/photo-1550948537-130a1ce83314?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
         },
         {
             title: "Oracle Park - Field View",
             location: "South Beach",
-            image: "https://images.unsplash.com/photo-1534195251218-0504b42656dc?q=80&w=1000&auto=format&fit=crop"
+            // Future file: sf_oracle_field.jpg
+            localImage: "sf_oracle_field.jpg",
+            fallbackImage: "https://images.unsplash.com/photo-1534195251218-0504b42656dc?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
         },
         {
             title: "Alcatraz Island",
             location: "San Francisco Bay",
-            image: "https://images.unsplash.com/photo-1542317854-f9bc35300a96?q=80&w=1000&auto=format&fit=crop"
+            // Future file: sf_alcatraz.jpg
+            localImage: "sf_alcatraz.jpg",
+            fallbackImage: "https://images.unsplash.com/photo-1542317854-f9bc35300a96?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
         }
+        ];
+
+        // Weather Data
+        const SF_WEATHER = [
+            { month: "Jan", highC: 14, lowC: 8, desc: "Cool & Rainy" },
+            { month: "Feb", highC: 15, lowC: 9, desc: "Cool & Rainy" },
+            { month: "Mar", highC: 16, lowC: 9, desc: "Mild Spring" },
+            { month: "Apr", highC: 17, lowC: 10, desc: "Sunny & Breezy" },
+            { month: "May", highC: 18, lowC: 11, desc: "Mild" },
+            { month: "Jun", highC: 19, lowC: 12, desc: "Foggy (June Gloom)" },
+            { month: "Jul", highC: 19, lowC: 12, desc: "Foggy (No-Sky July)" },
+            { month: "Aug", highC: 20, lowC: 13, desc: "Foggy Mornings" },
+            { month: "Sep", highC: 21, lowC: 13, desc: "Warmest Month!" },
+            { month: "Oct", highC: 21, lowC: 12, desc: "Sunny & Warm" },
+            { month: "Nov", highC: 17, lowC: 10, desc: "Cooling Down" },
+            { month: "Dec", highC: 14, lowC: 8, desc: "Cool & Rainy" },
         ];
 
         // --- Components ---
@@ -237,7 +303,7 @@
                 alt={title} 
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 onError={(e) => {
-                    // Use specific fallback if provided, otherwise default to Golden Gate Bridge
+                    // If local image fails (e.g. in preview), use fallback
                     const fallback = fallbackImage || "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=1600&auto=format&fit=crop";
                     if (e.target.src !== fallback) {
                         e.target.src = fallback;
@@ -350,14 +416,85 @@
             </div>
         );
 
+        // --- VIEW: WEATHER ---
+        const renderWeather = () => (
+            <div className="animate-fade-in">
+                <SectionHero 
+                    title="SF Weather Guide" 
+                    subtitle="Microclimates, Fog & Layers" 
+                    image={WEATHER_IMAGE_SRC}
+                    fallbackImage={WEATHER_FALLBACK_URL}
+                />
+
+                <div className="grid md:grid-cols-3 gap-8">
+                    <div className="md:col-span-2">
+                        <div className="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden mb-8">
+                            <div className="p-6 border-b border-stone-100 bg-stone-50 flex justify-between items-center">
+                                <div>
+                                    <h3 className="text-xl font-bold text-stone-800 flex items-center">
+                                        <Thermometer className="mr-2 text-amber-600" /> Monthly Averages
+                                    </h3>
+                                    <p className="text-xs text-stone-500">Celsius (°C)</p>
+                                </div>
+                                <div className="text-sm text-amber-600 font-bold bg-amber-50 px-3 py-1 rounded-full border border-amber-100">
+                                    Best: Sep - Oct
+                                </div>
+                            </div>
+                            <div className="divide-y divide-stone-100">
+                                {SF_WEATHER.map((w, i) => (
+                                    <div key={i} className="p-4 flex items-center justify-between hover:bg-stone-50 transition-colors">
+                                        <div className="w-16 font-bold text-stone-700">{w.month}</div>
+                                        <div className="flex-grow mx-4">
+                                            <div className="h-2 bg-stone-100 rounded-full overflow-hidden relative">
+                                                <div 
+                                                    className={`h-full rounded-full absolute ${w.highC >= 20 ? 'bg-orange-400' : w.highC >= 17 ? 'bg-amber-400' : 'bg-blue-300'}`} 
+                                                    style={{ left: '0%', width: `${(w.highC / 25) * 100}%` }}
+                                                ></div>
+                                            </div>
+                                            <div className="flex justify-between text-xs text-stone-400 mt-1">
+                                                <span>Low: {w.lowC}°</span>
+                                                <span>High: {w.highC}°</span>
+                                            </div>
+                                        </div>
+                                        <div className="w-32 text-right text-xs font-medium text-stone-500 bg-stone-100 px-2 py-1 rounded">
+                                            {w.desc}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="space-y-6">
+                        <div className="bg-blue-50 p-6 rounded-xl border border-blue-100">
+                            <h4 className="font-bold text-blue-900 mb-3 flex items-center"><Wind className="mr-2"/> What is "Karl"?</h4>
+                            <p className="text-sm text-blue-800 leading-relaxed">
+                                "Karl the Fog" is the nickname for SF's famous fog. It usually rolls in during summer afternoons (June-August), making the city surprisingly cold while the rest of California is hot.
+                            </p>
+                        </div>
+                        <div className="bg-stone-900 text-white p-6 rounded-xl shadow-lg">
+                            <h4 className="font-bold text-amber-500 mb-3">Packing Tips</h4>
+                            <ul className="space-y-2 text-sm text-stone-300 list-disc pl-4">
+                                <li><strong>Layers, Layers, Layers!</strong></li>
+                                <li>Light down jacket (even in July)</li>
+                                <li>Comfortable walking shoes</li>
+                                <li>Windbreaker</li>
+                                <li>No shorts (usually too cold)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
         // --- VIEW: TRANSPORT ---
         const renderTransport = () => (
             <div className="animate-fade-in">
             <SectionHero 
                 title="Flights & Getting Around" 
                 subtitle="From TPE to SFO and navigating the hills" 
-                image="image_2e8040.jpg"
-                fallbackImage="https://images.unsplash.com/photo-1531722563067-d2723330e09c?q=80&w=1600&auto=format&fit=crop"
+                image={SFO_IMAGE_SRC}
+                fallbackImage={SFO_FALLBACK_URL}
             />
 
             <div className="grid md:grid-cols-2 gap-8 mb-12">
@@ -447,7 +584,8 @@
             <SectionHero 
                 title="Go Giants!" 
                 subtitle="MLB Experience at Oracle Park" 
-                image="https://images.unsplash.com/photo-1534195251218-0504b42656dc?q=80&w=1600&auto=format&fit=crop"
+                image={GIANTS_HERO_SRC}
+                fallbackImage={GIANTS_HERO_FALLBACK}
             />
             
             <div className="bg-orange-50 border-l-4 border-orange-500 p-4 mb-8">
@@ -551,7 +689,8 @@
             <SectionHero 
                 title="Where to Stay" 
                 subtitle="Neighborhood guides and budget breakdowns" 
-                image="https://images.unsplash.com/photo-1523607067322-f0d03f549b23?q=80&w=1600&auto=format&fit=crop"
+                image={STAY_HERO_SRC}
+                fallbackImage={STAY_HERO_FALLBACK}
             />
 
             <div className="grid md:grid-cols-3 gap-6 mb-12">
@@ -578,7 +717,17 @@
                 {HOTELS.map((hotel, index) => (
                 <div key={index} className="bg-white rounded-xl shadow-lg overflow-hidden border border-stone-100 hover:shadow-xl transition-shadow flex flex-col">
                     <div className="h-48 overflow-hidden relative">
-                    <img src={hotel.image} alt={hotel.name} className="w-full h-full object-cover" />
+                    <img 
+                        src={hotel.isLocal ? hotel.localImage : hotel.image} 
+                        alt={hotel.name} 
+                        className="w-full h-full object-cover" 
+                        onError={(e) => {
+                            // Add hotel image fallback logic
+                            if (hotel.isLocal && hotel.fallbackImage && e.target.src !== hotel.fallbackImage) {
+                                e.target.src = hotel.fallbackImage;
+                            }
+                        }}
+                    />
                     <div className="absolute top-3 right-3 bg-white/90 backdrop-blur px-2 py-1 rounded text-xs font-bold text-stone-800 flex items-center">
                         <Star size={12} className="text-amber-500 mr-1 fill-amber-500"/> {hotel.rating}
                     </div>
@@ -687,9 +836,15 @@
                 {SF_GALLERY.map((item, index) => (
                 <div key={index} className="group relative overflow-hidden rounded-xl shadow-lg cursor-pointer aspect-[4/3]">
                     <img 
-                    src={item.image} 
+                    src={item.isLocal ? item.localImage : item.image} 
                     alt={item.title} 
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    onError={(e) => {
+                        // Fallback logic for gallery items
+                        if (item.isLocal && item.fallbackImage && e.target.src !== item.fallbackImage) {
+                            e.target.src = item.fallbackImage;
+                        }
+                    }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
                     <h3 className="text-white font-bold text-lg">{item.title}</h3>
@@ -815,6 +970,7 @@
                     {/* Desktop Nav */}
                     <div className="hidden md:flex space-x-2">
                     <NavButton id="itinerary" icon={Calendar} label="7 Days Plan" />
+                    <NavButton id="weather" icon={CloudSun} label="Weather" />
                     <NavButton id="transport" icon={Plane} label="Transport" />
                     <NavButton id="baseball" icon={Ticket} label="Giants Game" />
                     <NavButton id="hotels" icon={Hotel} label="Stays" />
@@ -836,6 +992,7 @@
                 {isMenuOpen && (
                 <div className="md:hidden bg-white border-b border-stone-200 p-4 space-y-2 shadow-lg absolute w-full">
                     <button onClick={() => {setActiveTab('itinerary'); setIsMenuOpen(false)}} className="block w-full text-left p-3 hover:bg-stone-50 rounded font-bold text-stone-700">7 Days Plan</button>
+                    <button onClick={() => {setActiveTab('weather'); setIsMenuOpen(false)}} className="block w-full text-left p-3 hover:bg-stone-50 rounded font-bold text-stone-700 flex items-center"><CloudSun size={16} className="mr-2"/> Weather</button>
                     <button onClick={() => {setActiveTab('transport'); setIsMenuOpen(false)}} className="block w-full text-left p-3 hover:bg-stone-50 rounded font-bold text-stone-700">Transport</button>
                     <button onClick={() => {setActiveTab('baseball'); setIsMenuOpen(false)}} className="block w-full text-left p-3 hover:bg-stone-50 rounded font-bold text-stone-700">Giants Game</button>
                     <button onClick={() => {setActiveTab('hotels'); setIsMenuOpen(false)}} className="block w-full text-left p-3 hover:bg-stone-50 rounded font-bold text-stone-700">Accommodation</button>
@@ -849,6 +1006,7 @@
             {/* Main Content Area */}
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {activeTab === 'itinerary' && renderItinerary()}
+                {activeTab === 'weather' && renderWeather()}
                 {activeTab === 'transport' && renderTransport()}
                 {activeTab === 'baseball' && renderBaseball()}
                 {activeTab === 'hotels' && renderAccommodation()}
