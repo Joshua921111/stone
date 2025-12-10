@@ -63,14 +63,14 @@
             MapPin, Calendar, Plane, Train, Hotel, Ticket, Coffee, Camera, 
             ChevronDown, ChevronUp, Info, DollarSign, Star, ArrowRight, Menu, 
             X, Bus, User, Mail, GraduationCap, 
-            Heart, Instagram, Image as ImageIcon, CloudSun, Thermometer, Wind
+            Heart, Instagram, Image as ImageIcon, CloudSun, Thermometer, Wind, Video
         } from 'lucide-react';
 
         // --- CONFIGURATION (圖片設定區) ---
         // 當您上傳到 GitHub 時，請確保以下檔案與 index.html 位於同一目錄。
         
-        // 1. Transport Page (改回您指定的 image_2e8040.jpg)
-        const SFO_IMAGE_SRC = "image_2e8040.jpg"; 
+        // 1. Transport Page
+        const SFO_IMAGE_SRC = "image_2e8040.jpg";
         const SFO_FALLBACK_URL = "https://images.unsplash.com/photo-1531722563067-d2723330e09c?q=80&w=1600&auto=format&fit=crop";
 
         // 2. Weather Page
@@ -90,7 +90,19 @@
         const CONTACT_DEFAULT_LOCAL = "image_6aa364.jpg"; 
         const CONTACT_FALLBACK_URL = "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1000&auto=format&fit=crop";
 
-        // 6. Gallery Images (新增的 10 張照片欄位 - Trip Memories)
+        // 6. Gallery Images (對應相簿中的 10 個景點)
+        const GALLERY_IMG_1  = "S__37912638_0.jpg"; 
+        const GALLERY_IMG_2  = "S__37912639_0.jpg"; 
+        const GALLERY_IMG_3  = "S__37912640_0.jpg"; 
+        const GALLERY_IMG_4  = "S__37912628_0.jpg"; 
+        const GALLERY_IMG_5  = "S__37912629_0.jpg"; 
+        const GALLERY_IMG_6  = "S__37912630_0.jpg"; 
+        const GALLERY_IMG_7  = "S__37912631_0.jpg"; 
+        const GALLERY_IMG_8  = "S__37912632_0.jpg"; 
+        const GALLERY_IMG_9  = "S__37912633_0.jpg"; 
+        const GALLERY_IMG_10 = "S__37912634_0.jpg"; 
+
+        // 7. Gallery Images (新增的 10 張 Trip Memories 照片)
         const NEW_IMG_1  = "S__37912638_0.jpg";
         const NEW_IMG_2  = "S__37912639_0.jpg";
         const NEW_IMG_3  = "S__37912640_0.jpg";
@@ -182,84 +194,85 @@
         }
         ];
 
-        // --- UPDATED GALLERY: PREVIOUS 10 + NEW 10 ---
         const SF_GALLERY = [
         // --- 1. Original Gallery Items (Using sf_*.jpg or Unsplash) ---
         {
             title: "Golden Gate Bridge",
             location: "Marin Headlands",
-            image: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
-            isLocal: false
+            localImage: GALLERY_IMG_1,
+            fallbackImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
         },
         {
             title: "Oracle Park - Game Day",
             location: "South Beach",
-            localImage: "sf_oracle_game.jpg",
+            localImage: GALLERY_IMG_2,
             fallbackImage: "https://images.unsplash.com/photo-1628266259513-4c26b34b5f73?q=80&w=1000&auto=format&fit=crop",
             isLocal: true
         },
         {
             title: "Palace of Fine Arts",
             location: "Marina District",
-            localImage: "sf_palace.jpg",
+            localImage: GALLERY_IMG_3,
             fallbackImage: "https://images.unsplash.com/photo-1549913188-1e644390740e?q=80&w=1000&auto=format&fit=crop",
             isLocal: true
         },
         {
             title: "Lombard Street",
             location: "Russian Hill",
-            localImage: "sf_lombard.jpg",
+            localImage: GALLERY_IMG_4,
             fallbackImage: "https://images.unsplash.com/photo-1528552695596-c57c93e1531a?q=80&w=1000&auto=format&fit=crop",
             isLocal: true
         },
         {
             title: "Painted Ladies",
             location: "Alamo Square",
-            image: "https://images.unsplash.com/photo-1521464302861-ce943915d1c3?q=80&w=1000&auto=format&fit=crop",
-            isLocal: false
+            localImage: GALLERY_IMG_5,
+            fallbackImage: "https://images.unsplash.com/photo-1521464302861-ce943915d1c3?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
         },
         {
             title: "San Francisco Cable Car",
             location: "Powell Street",
-            localImage: "sf_cablecar.jpg",
+            localImage: GALLERY_IMG_6,
             fallbackImage: "https://images.unsplash.com/photo-1556379346-2419e4279414?q=80&w=1000&auto=format&fit=crop",
             isLocal: true
         },
         {
             title: "Pier 39 Sea Lions",
             location: "Fisherman's Wharf",
-            localImage: "sf_sealions.jpg",
+            localImage: GALLERY_IMG_7,
             fallbackImage: "https://images.unsplash.com/photo-1569838616563-279e3451d85d?q=80&w=1000&auto=format&fit=crop",
             isLocal: true
         },
         {
             title: "Chinatown",
             location: "Grant Avenue",
-            localImage: "sf_chinatown.jpg",
+            localImage: GALLERY_IMG_8,
             fallbackImage: "https://images.unsplash.com/photo-1550948537-130a1ce83314?q=80&w=1000&auto=format&fit=crop",
             isLocal: true
         },
         {
             title: "Oracle Park - Field View",
             location: "South Beach",
-            localImage: "sf_oracle_field.jpg",
+            localImage: GALLERY_IMG_9,
             fallbackImage: "https://images.unsplash.com/photo-1534195251218-0504b42656dc?q=80&w=1000&auto=format&fit=crop",
             isLocal: true
         },
         {
             title: "Alcatraz Island",
             location: "San Francisco Bay",
-            localImage: "sf_alcatraz.jpg",
+            localImage: GALLERY_IMG_10,
             fallbackImage: "https://images.unsplash.com/photo-1542317854-f9bc35300a96?q=80&w=1000&auto=format&fit=crop",
             isLocal: true
         },
         
-        // --- 2. New Uploaded Items (Added, not replacing) ---
+        // --- 2. New Uploaded Items (Trip Memories) ---
         {
             title: "Trip Memory 1",
             location: "San Francisco",
             localImage: NEW_IMG_1,
-            fallbackImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop", // Generic fallback
+            fallbackImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop", 
             isLocal: true
         },
         {
@@ -327,6 +340,22 @@
         }
         ];
 
+        // --- VIDEOS DATA ---
+        const SF_VIDEOS = [
+            {
+                title: "My SF Vlog - Part 1",
+                url: "https://drive.google.com/file/d/1m1mK9eWbnq7oUS-nl8314VosimpYzQNf/preview"
+            },
+            {
+                title: "My SF Vlog - Part 2",
+                url: "https://drive.google.com/file/d/1WI8GQsI_c_WDIX_xiECWhZU3iaRpPRKK/preview"
+            },
+            {
+                title: "My SF Vlog - Part 3",
+                url: "https://drive.google.com/file/d/1pVPx9EGrEvxnALe9GadY7EIIu11ttGny/preview"
+            }
+        ];
+
         // Weather Data
         const SF_WEATHER = [
             { month: "Jan", highC: 14, lowC: 8, desc: "Cool & Rainy" },
@@ -367,7 +396,7 @@
         );
 
         function App() {
-        const [activeTab, setActiveTab] = useState('itinerary');
+        const [activeTab, setActiveTab] = useState('itinerary'); // itinerary, weather, transport, baseball, hotels, gallery, contact
         const [isMenuOpen, setIsMenuOpen] = useState(false);
         const [openDay, setOpenDay] = useState(0);
 
@@ -807,7 +836,7 @@
             </div>
         );
 
-        // --- VIEW: GALLERY ---
+        // --- VIEW: GALLERY (Includes Photos & Videos) ---
         const renderGallery = () => (
             <div className="animate-fade-in">
             <SectionHero 
@@ -817,6 +846,7 @@
             />
             
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {/* 1. Photos */}
                 {SF_GALLERY.map((item, index) => (
                 <div key={index} className="group relative overflow-hidden rounded-xl shadow-lg cursor-pointer aspect-[4/3]">
                     <img 
@@ -837,6 +867,27 @@
                     </div>
                     </div>
                 </div>
+                ))}
+
+                {/* 2. Videos (Displayed in the same grid format) */}
+                {SF_VIDEOS.map((video, index) => (
+                   <div key={`vlog-${index}`} className="group relative overflow-hidden rounded-xl shadow-lg cursor-pointer aspect-[4/3] bg-stone-900">
+                       <iframe 
+                           src={video.url}
+                           className="w-full h-full"
+                           allow="autoplay"
+                           allowFullScreen
+                           title={video.title}
+                           style={{ border: 0 }}
+                       ></iframe>
+                       {/* Subtle title overlay that doesn't block interaction but shows info */}
+                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 pointer-events-none">
+                           <h3 className="text-white font-bold text-lg">{video.title}</h3>
+                           <div className="flex items-center text-stone-300 text-xs mt-1">
+                               <Video size={12} className="mr-1" /> Vlog
+                           </div>
+                       </div>
+                   </div>
                 ))}
             </div>
             </div>
