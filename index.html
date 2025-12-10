@@ -69,8 +69,8 @@
         // --- CONFIGURATION (圖片設定區) ---
         // 當您上傳到 GitHub 時，請確保以下檔案與 index.html 位於同一目錄。
         
-        // 1. Transport Page
-        const SFO_IMAGE_SRC = "image_2efcbb.jpg"; // 更新為您最新上傳的機場照片
+        // 1. Transport Page (改回您指定的 image_2e8040.jpg)
+        const SFO_IMAGE_SRC = "image_2e8040.jpg"; 
         const SFO_FALLBACK_URL = "https://images.unsplash.com/photo-1531722563067-d2723330e09c?q=80&w=1600&auto=format&fit=crop";
 
         // 2. Weather Page
@@ -90,18 +90,17 @@
         const CONTACT_DEFAULT_LOCAL = "image_6aa364.jpg"; 
         const CONTACT_FALLBACK_URL = "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1000&auto=format&fit=crop";
 
-        // 6. Gallery Images (新增的 10 張照片欄位)
-        // 這些變數對應到 Pictures 頁面的 10 個景點
-        const GALLERY_IMG_1  = "S__37912638_0.jpg"; // Golden Gate Bridge
-        const GALLERY_IMG_2  = "S__37912639_0.jpg"; // Oracle Park - Game Day
-        const GALLERY_IMG_3  = "S__37912640_0.jpg"; // Palace of Fine Arts
-        const GALLERY_IMG_4  = "S__37912628_0.jpg"; // Lombard Street
-        const GALLERY_IMG_5  = "S__37912629_0.jpg"; // Painted Ladies
-        const GALLERY_IMG_6  = "S__37912630_0.jpg"; // San Francisco Cable Car
-        const GALLERY_IMG_7  = "S__37912631_0.jpg"; // Pier 39 Sea Lions
-        const GALLERY_IMG_8  = "S__37912632_0.jpg"; // Chinatown
-        const GALLERY_IMG_9  = "S__37912633_0.jpg"; // Oracle Park - Field View
-        const GALLERY_IMG_10 = "S__37912634_0.jpg"; // Alcatraz Island
+        // 6. Gallery Images (新增的 10 張照片欄位 - Trip Memories)
+        const NEW_IMG_1  = "S__37912638_0.jpg";
+        const NEW_IMG_2  = "S__37912639_0.jpg";
+        const NEW_IMG_3  = "S__37912640_0.jpg";
+        const NEW_IMG_4  = "S__37912628_0.jpg";
+        const NEW_IMG_5  = "S__37912629_0.jpg";
+        const NEW_IMG_6  = "S__37912630_0.jpg";
+        const NEW_IMG_7  = "S__37912631_0.jpg";
+        const NEW_IMG_8  = "S__37912632_0.jpg";
+        const NEW_IMG_9  = "S__37912633_0.jpg";
+        const NEW_IMG_10 = "S__37912634_0.jpg";
 
         // ---------------------
 
@@ -183,78 +182,147 @@
         }
         ];
 
-        // --- UPDATED GALLERY WITH ALL 10 LOCAL FILES ---
-        // 這些檔案名稱對應到您截圖中的檔案列表。
-        // 請確保這些檔案都已經上傳到 GitHub 的同一資料夾中。
+        // --- UPDATED GALLERY: PREVIOUS 10 + NEW 10 ---
         const SF_GALLERY = [
+        // --- 1. Original Gallery Items (Using sf_*.jpg or Unsplash) ---
         {
             title: "Golden Gate Bridge",
             location: "Marin Headlands",
-            localImage: GALLERY_IMG_1,
-            fallbackImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
-            isLocal: true
+            image: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
+            isLocal: false
         },
         {
             title: "Oracle Park - Game Day",
             location: "South Beach",
-            localImage: GALLERY_IMG_2,
+            localImage: "sf_oracle_game.jpg",
             fallbackImage: "https://images.unsplash.com/photo-1628266259513-4c26b34b5f73?q=80&w=1000&auto=format&fit=crop",
             isLocal: true
         },
         {
             title: "Palace of Fine Arts",
             location: "Marina District",
-            localImage: GALLERY_IMG_3,
+            localImage: "sf_palace.jpg",
             fallbackImage: "https://images.unsplash.com/photo-1549913188-1e644390740e?q=80&w=1000&auto=format&fit=crop",
             isLocal: true
         },
         {
             title: "Lombard Street",
             location: "Russian Hill",
-            localImage: GALLERY_IMG_4,
+            localImage: "sf_lombard.jpg",
             fallbackImage: "https://images.unsplash.com/photo-1528552695596-c57c93e1531a?q=80&w=1000&auto=format&fit=crop",
             isLocal: true
         },
         {
             title: "Painted Ladies",
             location: "Alamo Square",
-            localImage: GALLERY_IMG_5,
-            fallbackImage: "https://images.unsplash.com/photo-1521464302861-ce943915d1c3?q=80&w=1000&auto=format&fit=crop",
-            isLocal: true
+            image: "https://images.unsplash.com/photo-1521464302861-ce943915d1c3?q=80&w=1000&auto=format&fit=crop",
+            isLocal: false
         },
         {
             title: "San Francisco Cable Car",
             location: "Powell Street",
-            localImage: GALLERY_IMG_6,
+            localImage: "sf_cablecar.jpg",
             fallbackImage: "https://images.unsplash.com/photo-1556379346-2419e4279414?q=80&w=1000&auto=format&fit=crop",
             isLocal: true
         },
         {
             title: "Pier 39 Sea Lions",
             location: "Fisherman's Wharf",
-            localImage: GALLERY_IMG_7,
+            localImage: "sf_sealions.jpg",
             fallbackImage: "https://images.unsplash.com/photo-1569838616563-279e3451d85d?q=80&w=1000&auto=format&fit=crop",
             isLocal: true
         },
         {
             title: "Chinatown",
             location: "Grant Avenue",
-            localImage: GALLERY_IMG_8,
+            localImage: "sf_chinatown.jpg",
             fallbackImage: "https://images.unsplash.com/photo-1550948537-130a1ce83314?q=80&w=1000&auto=format&fit=crop",
             isLocal: true
         },
         {
             title: "Oracle Park - Field View",
             location: "South Beach",
-            localImage: GALLERY_IMG_9,
+            localImage: "sf_oracle_field.jpg",
             fallbackImage: "https://images.unsplash.com/photo-1534195251218-0504b42656dc?q=80&w=1000&auto=format&fit=crop",
             isLocal: true
         },
         {
             title: "Alcatraz Island",
             location: "San Francisco Bay",
-            localImage: GALLERY_IMG_10,
+            localImage: "sf_alcatraz.jpg",
             fallbackImage: "https://images.unsplash.com/photo-1542317854-f9bc35300a96?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
+        },
+        
+        // --- 2. New Uploaded Items (Added, not replacing) ---
+        {
+            title: "Trip Memory 1",
+            location: "San Francisco",
+            localImage: NEW_IMG_1,
+            fallbackImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop", // Generic fallback
+            isLocal: true
+        },
+        {
+            title: "Trip Memory 2",
+            location: "San Francisco",
+            localImage: NEW_IMG_2,
+            fallbackImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
+        },
+        {
+            title: "Trip Memory 3",
+            location: "San Francisco",
+            localImage: NEW_IMG_3,
+            fallbackImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
+        },
+        {
+            title: "Trip Memory 4",
+            location: "San Francisco",
+            localImage: NEW_IMG_4,
+            fallbackImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
+        },
+        {
+            title: "Trip Memory 5",
+            location: "San Francisco",
+            localImage: NEW_IMG_5,
+            fallbackImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
+        },
+        {
+            title: "Trip Memory 6",
+            location: "San Francisco",
+            localImage: NEW_IMG_6,
+            fallbackImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
+        },
+        {
+            title: "Trip Memory 7",
+            location: "San Francisco",
+            localImage: NEW_IMG_7,
+            fallbackImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
+        },
+        {
+            title: "Trip Memory 8",
+            location: "San Francisco",
+            localImage: NEW_IMG_8,
+            fallbackImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
+        },
+        {
+            title: "Trip Memory 9",
+            location: "San Francisco",
+            localImage: NEW_IMG_9,
+            fallbackImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
+        },
+        {
+            title: "Trip Memory 10",
+            location: "San Francisco",
+            localImage: NEW_IMG_10,
+            fallbackImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
             isLocal: true
         }
         ];
