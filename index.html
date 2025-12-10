@@ -67,21 +67,21 @@
         } from 'lucide-react';
 
         // --- CONFIGURATION (圖片設定區) ---
-        // 請依照下方的檔名準備照片，並放在同一個資料夾中。
+        // 當您上傳到 GitHub 時，請確保以下檔案與 index.html 位於同一目錄。
         
         // 1. Transport Page
-        const SFO_IMAGE_SRC = "image_2e8040.jpg";
+        const SFO_IMAGE_SRC = "image_2efcbb.jpg"; // 更新為您最新上傳的機場照片
         const SFO_FALLBACK_URL = "https://images.unsplash.com/photo-1531722563067-d2723330e09c?q=80&w=1600&auto=format&fit=crop";
 
         // 2. Weather Page
         const WEATHER_IMAGE_SRC = "sf_weather.jpg";
         const WEATHER_FALLBACK_URL = "https://images.unsplash.com/photo-1526404422292-16901184f5eb?q=80&w=1600&auto=format&fit=crop";
 
-        // 3. Baseball Page Hero (Go Giants!)
+        // 3. Baseball Page Hero
         const GIANTS_HERO_SRC = "sf_giants.jpg";
         const GIANTS_HERO_FALLBACK = "https://images.unsplash.com/photo-1534195251218-0504b42656dc?q=80&w=1600&auto=format&fit=crop";
 
-        // 4. Accommodation Page Hero (Where to Stay)
+        // 4. Accommodation Page Hero
         const STAY_HERO_SRC = "sf_stay.jpg";
         const STAY_HERO_FALLBACK = "https://images.unsplash.com/photo-1523607067322-f0d03f549b23?q=80&w=1600&auto=format&fit=crop";
 
@@ -89,6 +89,19 @@
         const CONTACT_IMAGE_SRC = "stone_profile.jpg";
         const CONTACT_DEFAULT_LOCAL = "image_6aa364.jpg"; 
         const CONTACT_FALLBACK_URL = "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1000&auto=format&fit=crop";
+
+        // 6. Gallery Images (新增的 10 張照片欄位)
+        // 這些變數對應到 Pictures 頁面的 10 個景點
+        const GALLERY_IMG_1  = "S__37912638_0.jpg"; // Golden Gate Bridge
+        const GALLERY_IMG_2  = "S__37912639_0.jpg"; // Oracle Park - Game Day
+        const GALLERY_IMG_3  = "S__37912640_0.jpg"; // Palace of Fine Arts
+        const GALLERY_IMG_4  = "S__37912628_0.jpg"; // Lombard Street
+        const GALLERY_IMG_5  = "S__37912629_0.jpg"; // Painted Ladies
+        const GALLERY_IMG_6  = "S__37912630_0.jpg"; // San Francisco Cable Car
+        const GALLERY_IMG_7  = "S__37912631_0.jpg"; // Pier 39 Sea Lions
+        const GALLERY_IMG_8  = "S__37912632_0.jpg"; // Chinatown
+        const GALLERY_IMG_9  = "S__37912633_0.jpg"; // Oracle Park - Field View
+        const GALLERY_IMG_10 = "S__37912634_0.jpg"; // Alcatraz Island
 
         // ---------------------
 
@@ -170,72 +183,77 @@
         }
         ];
 
+        // --- UPDATED GALLERY WITH ALL 10 LOCAL FILES ---
+        // 這些檔案名稱對應到您截圖中的檔案列表。
+        // 請確保這些檔案都已經上傳到 GitHub 的同一資料夾中。
         const SF_GALLERY = [
         {
             title: "Golden Gate Bridge",
             location: "Marin Headlands",
-            image: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
-            isLocal: false
+            localImage: GALLERY_IMG_1,
+            fallbackImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
         },
         {
             title: "Oracle Park - Game Day",
             location: "South Beach",
-            localImage: "sf_oracle_game.jpg",
+            localImage: GALLERY_IMG_2,
             fallbackImage: "https://images.unsplash.com/photo-1628266259513-4c26b34b5f73?q=80&w=1000&auto=format&fit=crop",
             isLocal: true
         },
         {
             title: "Palace of Fine Arts",
             location: "Marina District",
-            localImage: "sf_palace.jpg",
+            localImage: GALLERY_IMG_3,
             fallbackImage: "https://images.unsplash.com/photo-1549913188-1e644390740e?q=80&w=1000&auto=format&fit=crop",
             isLocal: true
         },
         {
             title: "Lombard Street",
             location: "Russian Hill",
-            localImage: "sf_lombard.jpg",
+            localImage: GALLERY_IMG_4,
             fallbackImage: "https://images.unsplash.com/photo-1528552695596-c57c93e1531a?q=80&w=1000&auto=format&fit=crop",
             isLocal: true
         },
         {
             title: "Painted Ladies",
             location: "Alamo Square",
-            image: "https://images.unsplash.com/photo-1521464302861-ce943915d1c3?q=80&w=1000&auto=format&fit=crop",
-            isLocal: false
+            localImage: GALLERY_IMG_5,
+            fallbackImage: "https://images.unsplash.com/photo-1521464302861-ce943915d1c3?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
         },
         {
             title: "San Francisco Cable Car",
             location: "Powell Street",
-            localImage: "sf_cablecar.jpg",
+            localImage: GALLERY_IMG_6,
             fallbackImage: "https://images.unsplash.com/photo-1556379346-2419e4279414?q=80&w=1000&auto=format&fit=crop",
             isLocal: true
         },
         {
             title: "Pier 39 Sea Lions",
             location: "Fisherman's Wharf",
-            localImage: "sf_sealions.jpg",
+            localImage: GALLERY_IMG_7,
             fallbackImage: "https://images.unsplash.com/photo-1569838616563-279e3451d85d?q=80&w=1000&auto=format&fit=crop",
             isLocal: true
         },
         {
             title: "Chinatown",
             location: "Grant Avenue",
-            localImage: "sf_chinatown.jpg",
+            localImage: GALLERY_IMG_8,
             fallbackImage: "https://images.unsplash.com/photo-1550948537-130a1ce83314?q=80&w=1000&auto=format&fit=crop",
             isLocal: true
         },
         {
             title: "Oracle Park - Field View",
             location: "South Beach",
-            localImage: "sf_oracle_field.jpg",
+            localImage: GALLERY_IMG_9,
             fallbackImage: "https://images.unsplash.com/photo-1534195251218-0504b42656dc?q=80&w=1000&auto=format&fit=crop",
             isLocal: true
         },
         {
             title: "Alcatraz Island",
             location: "San Francisco Bay",
-            localImage: "sf_alcatraz.jpg",
+            localImage: GALLERY_IMG_10,
             fallbackImage: "https://images.unsplash.com/photo-1542317854-f9bc35300a96?q=80&w=1000&auto=format&fit=crop",
             isLocal: true
         }
@@ -304,7 +322,7 @@
                 image="https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1600&auto=format&fit=crop"
             />
             
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-3 gap-8 mb-12">
                 <div className="md:col-span-2 space-y-4">
                 <h3 className="text-2xl font-bold text-stone-800 mb-6 flex items-center">
                     <Calendar className="mr-2 text-amber-600" /> Daily Plan
@@ -354,6 +372,24 @@
                     <strong>Always dress in layers!</strong>
                     </p>
                 </div>
+                </div>
+            </div>
+
+            {/* MOVED REFLECTION SECTION HERE */}
+            <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 border border-stone-200">
+                <h3 className="text-3xl font-serif font-bold text-stone-900 mb-8 flex items-center justify-center">
+                    <Heart className="mr-3 text-red-500 fill-red-500" /> My Trip Reflections
+                </h3>
+                <div className="prose prose-stone prose-lg max-w-none text-stone-600 leading-relaxed text-justify">
+                    <p className="mb-6">
+                        Visiting San Francisco was an unforgettable experience that allowed me to explore both the city’s famous landmarks and its unique cultural atmosphere. During my trip, I visited the Golden Gate Bridge, one of the most recognizable structures in the world. Standing in front of it felt surreal, and the view of the bay was absolutely breathtaking. I also spent time wandering around Fisherman’s Wharf and Pier 39, where I enjoyed watching sea lions, tasting fresh seafood, and experiencing the lively waterfront environment.
+                    </p>
+                    <p className="mb-6">
+                        Another highlight of my trip was Chinatown. It was fascinating to see how different cultures blend together in one place. The streets were full of traditional shops, colorful decorations, and delicious food. I also visited Union Square and enjoyed shopping and people-watching. Riding the historic cable car was another memorable experience—it made me appreciate the city’s history and charm.
+                    </p>
+                    <p>
+                        What stood out the most about San Francisco was its diversity and inclusiveness. People from different backgrounds live together in harmony, creating a warm and open atmosphere. The city’s cool weather and beautiful scenery made every moment enjoyable. Overall, this trip broadened my horizons, helped me relax, and left me with wonderful memories. I would definitely love to visit San Francisco again in the future.
+                    </p>
                 </div>
             </div>
             </div>
