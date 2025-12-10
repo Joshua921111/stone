@@ -67,10 +67,9 @@
         } from 'lucide-react';
 
         // --- CONFIGURATION (圖片設定區) ---
-        // 當您上傳到 GitHub 時，請確保以下檔案與 index.html 位於同一目錄。
         
         // 1. Transport Page
-        const SFO_IMAGE_SRC = "image_2e8040.jpg";
+        const SFO_IMAGE_SRC = "image_2e8040.jpg"; 
         const SFO_FALLBACK_URL = "https://images.unsplash.com/photo-1531722563067-d2723330e09c?q=80&w=1600&auto=format&fit=crop";
 
         // 2. Weather Page
@@ -90,19 +89,22 @@
         const CONTACT_DEFAULT_LOCAL = "image_6aa364.jpg"; 
         const CONTACT_FALLBACK_URL = "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1000&auto=format&fit=crop";
 
-        // 6. Gallery Images (對應相簿中的 10 個景點)
-        const GALLERY_IMG_1  = "S__37912638_0.jpg"; 
-        const GALLERY_IMG_2  = "S__37912639_0.jpg"; 
-        const GALLERY_IMG_3  = "S__37912640_0.jpg"; 
-        const GALLERY_IMG_4  = "S__37912628_0.jpg"; 
-        const GALLERY_IMG_5  = "S__37912629_0.jpg"; 
-        const GALLERY_IMG_6  = "S__37912630_0.jpg"; 
-        const GALLERY_IMG_7  = "S__37912631_0.jpg"; 
-        const GALLERY_IMG_8  = "S__37912632_0.jpg"; 
-        const GALLERY_IMG_9  = "S__37912633_0.jpg"; 
-        const GALLERY_IMG_10 = "S__37912634_0.jpg"; 
+        // 6. Gallery Images (第一組：原本規劃的 10 個景點)
+        // 為了避免重複，這些變數改回使用具描述性的檔名。
+        // 請您未來依照這些名稱來命名對應的景點照片。
+        const GALLERY_IMG_1  = "sf_goldengate.jpg"; 
+        const GALLERY_IMG_2  = "sf_oracle_game.jpg";
+        const GALLERY_IMG_3  = "sf_palace.jpg";
+        const GALLERY_IMG_4  = "sf_lombard.jpg"; 
+        const GALLERY_IMG_5  = "sf_painted_ladies.jpg"; 
+        const GALLERY_IMG_6  = "sf_cablecar.jpg";
+        const GALLERY_IMG_7  = "sf_sealions.jpg"; 
+        const GALLERY_IMG_8  = "sf_chinatown.jpg";
+        const GALLERY_IMG_9  = "sf_oracle_field.jpg"; 
+        const GALLERY_IMG_10 = "sf_alcatraz.jpg";
 
-        // 7. Gallery Images (新增的 10 張 Trip Memories 照片)
+        // 7. Gallery Images (第二組：新上傳的 10 張 Trip Memories)
+        // 這些對應到您截圖中的 S__xxxx.jpg 檔案
         const NEW_IMG_1  = "S__37912638_0.jpg";
         const NEW_IMG_2  = "S__37912639_0.jpg";
         const NEW_IMG_3  = "S__37912640_0.jpg";
@@ -195,7 +197,7 @@
         ];
 
         const SF_GALLERY = [
-        // --- 1. Original Gallery Items (Using sf_*.jpg or Unsplash) ---
+        // --- 1. Original Gallery Items (First 10 - Using sf_*.jpg) ---
         {
             title: "Golden Gate Bridge",
             location: "Marin Headlands",
@@ -267,7 +269,7 @@
             isLocal: true
         },
         
-        // --- 2. New Uploaded Items (Trip Memories) ---
+        // --- 2. New Uploaded Items (Second 10 - Using S__xxxx.jpg) ---
         {
             title: "Trip Memory 1",
             location: "San Francisco",
