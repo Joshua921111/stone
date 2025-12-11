@@ -89,9 +89,7 @@
         const CONTACT_DEFAULT_LOCAL = "image_6aa364.jpg"; 
         const CONTACT_FALLBACK_URL = "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1000&auto=format&fit=crop";
 
-        // 6. Gallery Images (第一組：原本規劃的 10 個景點)
-        // 為了避免重複，這些變數改回使用具描述性的檔名。
-        // 請您未來依照這些名稱來命名對應的景點照片。
+        // 6. Gallery Images (Part 1: 景點)
         const GALLERY_IMG_1  = "sf_goldengate.jpg"; 
         const GALLERY_IMG_2  = "sf_oracle_game.jpg";
         const GALLERY_IMG_3  = "sf_palace.jpg";
@@ -103,8 +101,7 @@
         const GALLERY_IMG_9  = "sf_oracle_field.jpg"; 
         const GALLERY_IMG_10 = "sf_alcatraz.jpg";
 
-        // 7. Gallery Images (第二組：新上傳的 10 張 Trip Memories)
-        // 這些對應到您截圖中的 S__xxxx.jpg 檔案
+        // 7. Gallery Images (Part 2: Trip Memories S__)
         const NEW_IMG_1  = "S__37912638_0.jpg";
         const NEW_IMG_2  = "S__37912639_0.jpg";
         const NEW_IMG_3  = "S__37912640_0.jpg";
@@ -115,6 +112,18 @@
         const NEW_IMG_8  = "S__37912632_0.jpg";
         const NEW_IMG_9  = "S__37912633_0.jpg";
         const NEW_IMG_10 = "S__37912634_0.jpg";
+
+        // 8. Gallery Images (Part 3: Latest Additions) [新增!]
+        const LATEST_IMG_1  = "1F44C107-3E8F-4088-8EFE-C44FF9710EAC_0.jpg";
+        const LATEST_IMG_2  = "2BB6BA38-04FF-48CF-9EBC-7E73A7CB23F7_0.jpg";
+        const LATEST_IMG_3  = "5FC1BF7D-EC55-43DD-AC93-3FB88C868B4E_0.jpg";
+        const LATEST_IMG_4  = "9F6B0A51-A0FA-4849-B9F1-F523BBB5D64F_0.jpg";
+        const LATEST_IMG_5  = "13B4FE45-6813-4927-B6D5-4933EF0DDF33_0.jpg";
+        const LATEST_IMG_6  = "69AC1B7A-F438-49BF-97E6-B8A82575D1A4_0.jpg";
+        const LATEST_IMG_7  = "602E9BE6-87B4-409E-84D6-75781E5DCEE3_0.jpg";
+        const LATEST_IMG_8  = "964330F6-E3C7-471B-917B-A71E6EEB00C6_0.jpg";
+        const LATEST_IMG_9  = "64547827-E360-423D-8928-33048EB03D11_0.jpg";
+        const LATEST_IMG_10 = "EAB5742B-36E2-41FA-9FB0-5D0E8769FDF5_0.jpg";
 
         // ---------------------
 
@@ -197,7 +206,7 @@
         ];
 
         const SF_GALLERY = [
-        // --- 1. Original Gallery Items (First 10 - Using sf_*.jpg) ---
+        // --- 1. Original Gallery Items (First 10) ---
         {
             title: "Golden Gate Bridge",
             location: "Marin Headlands",
@@ -269,7 +278,7 @@
             isLocal: true
         },
         
-        // --- 2. New Uploaded Items (Second 10 - Using S__xxxx.jpg) ---
+        // --- 2. Trip Memories (S__xxxx.jpg) ---
         {
             title: "Trip Memory 1",
             location: "San Francisco",
@@ -339,6 +348,78 @@
             localImage: NEW_IMG_10,
             fallbackImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
             isLocal: true
+        },
+
+        // --- 3. Latest Additions (Long filenames) ---
+        {
+            title: "Gallery Photo 1",
+            location: "San Francisco",
+            localImage: LATEST_IMG_1,
+            fallbackImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
+        },
+        {
+            title: "Gallery Photo 2",
+            location: "San Francisco",
+            localImage: LATEST_IMG_2,
+            fallbackImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
+        },
+        {
+            title: "Gallery Photo 3",
+            location: "San Francisco",
+            localImage: LATEST_IMG_3,
+            fallbackImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
+        },
+        {
+            title: "Gallery Photo 4",
+            location: "San Francisco",
+            localImage: LATEST_IMG_4,
+            fallbackImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
+        },
+        {
+            title: "Gallery Photo 5",
+            location: "San Francisco",
+            localImage: LATEST_IMG_5,
+            fallbackImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
+        },
+        {
+            title: "Gallery Photo 6",
+            location: "San Francisco",
+            localImage: LATEST_IMG_6,
+            fallbackImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
+        },
+        {
+            title: "Gallery Photo 7",
+            location: "San Francisco",
+            localImage: LATEST_IMG_7,
+            fallbackImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
+        },
+        {
+            title: "Gallery Photo 8",
+            location: "San Francisco",
+            localImage: LATEST_IMG_8,
+            fallbackImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
+        },
+        {
+            title: "Gallery Photo 9",
+            location: "San Francisco",
+            localImage: LATEST_IMG_9,
+            fallbackImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
+        },
+        {
+            title: "Gallery Photo 10",
+            location: "San Francisco",
+            localImage: LATEST_IMG_10,
+            fallbackImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000&auto=format&fit=crop",
+            isLocal: true
         }
         ];
 
@@ -398,7 +479,7 @@
         );
 
         function App() {
-        const [activeTab, setActiveTab] = useState('itinerary'); // itinerary, weather, transport, baseball, hotels, gallery, contact
+        const [activeTab, setActiveTab] = useState('itinerary');
         const [isMenuOpen, setIsMenuOpen] = useState(false);
         const [openDay, setOpenDay] = useState(0);
 
